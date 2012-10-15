@@ -1,5 +1,7 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
+$(call inherit-product, device/sony/montblanc-common/recovery/recovery.mk)
+
 DEVICE_PACKAGE_OVERLAYS += device/sony/montblanc-common/overlay
 
 # Permissions
@@ -26,6 +28,10 @@ PRODUCT_COPY_FILES += \
 # Configs
 PRODUCT_COPY_FILES += \
     device/sony/montblanc-common/config/egl.cfg:system/lib/egl/egl.cfg \
+    device/sony/montblanc-common/config/asound.conf:system/etc/asound.conf \
+    device/sony/montblanc-common/config/dbus.conf:system/etc/dbus.conf \
+    device/sony/montblanc-common/config/sysmon.cfg:system/etc/sysmon.cfg \
+    device/sony/montblanc-common/config/01stesetup:system/etc/init.d/01stesetup \
     device/sony/montblanc-common/config/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
 
 # Filesystem management tools
@@ -46,11 +52,11 @@ PRODUCT_PACKAGES += \
    com.android.future.usb.accessory
 
 # NFC
-PRODUCT_PACKAGES += \
-   libnfc \
-   libnfc_jni \
-   Nfc \
-   Tag
+#PRODUCT_PACKAGES += \
+#   libnfc \
+#   libnfc_jni \
+#   Nfc \
+#   Tag
 
 # We have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
@@ -59,45 +65,23 @@ PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
 
 # Custom init / uevent
 PRODUCT_COPY_FILES += \
+    device/sony/montblanc-common/config/init.rc:root/init.rc \
     device/sony/montblanc-common/config/init.st-ericsson.rc:root/init.st-ericsson.rc \
     device/sony/montblanc-common/config/ueventd.st-ericsson.rc:root/ueventd.st-ericsson.rc
 
 # Recovery bootstrap script
 PRODUCT_COPY_FILES += \
     device/sony/montblanc-common/recovery/bootrec:root/sbin/bootrec \
+    device/sony/montblanc-common/recovery/usbid_init.sh:root/sbin/usbid_init.sh \
     device/sony/montblanc-common/recovery/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
 
 
 # HW Configs
 PRODUCT_COPY_FILES += \
-    device/sony/montblanc-common/config/omxloaders:system/omxloaders \
+    device/sony/montblanc-common/config/omxloaders:system/etc/omxloaders \
     device/sony/montblanc-common/config/ril_config:system/etc/ril_config \
+    device/sony/montblanc-common/config/install_wlan:system/bin/install_wlan \
     device/sony/montblanc-common/config/ste_modem.sh:system/etc/ste_modem.sh
-
-# Recovery resources
-PRODUCT_COPY_FILES += \
-    bootable/recovery/res/images/icon_firmware_error.png:root/res/images/icon_firmware_error.png \
-    bootable/recovery/res/images/icon_firmware_install.png:root/res/images/icon_firmware_install.png \
-    bootable/recovery/res/images/icon_clockwork.png:root/res/images/icon_clockwork.png \
-    bootable/recovery/res/images/icon_error.png:root/res/images/icon_error.png \
-    bootable/recovery/res/images/icon_installing.png:root/res/images/icon_installing.png \
-    bootable/recovery/res/images/icon_installing_overlay01.png:root/res/images/icon_installing_overlay01.png \
-    bootable/recovery/res/images/icon_installing_overlay02.png:root/res/images/icon_installing_overlay02.png \
-    bootable/recovery/res/images/icon_installing_overlay03.png:root/res/images/icon_installing_overlay03.png \
-    bootable/recovery/res/images/icon_installing_overlay04.png:root/res/images/icon_installing_overlay04.png \
-    bootable/recovery/res/images/icon_installing_overlay05.png:root/res/images/icon_installing_overlay05.png \
-    bootable/recovery/res/images/icon_installing_overlay06.png:root/res/images/icon_installing_overlay06.png \
-    bootable/recovery/res/images/icon_installing_overlay07.png:root/res/images/icon_installing_overlay07.png \
-    bootable/recovery/res/images/indeterminate01.png:root/res/images/indeterminate01.png \
-    bootable/recovery/res/images/indeterminate02.png:root/res/images/indeterminate02.png \
-    bootable/recovery/res/images/indeterminate03.png:root/res/images/indeterminate03.png \
-    bootable/recovery/res/images/indeterminate04.png:root/res/images/indeterminate04.png \
-    bootable/recovery/res/images/indeterminate05.png:root/res/images/indeterminate05.png \
-    bootable/recovery/res/images/indeterminate06.png:root/res/images/indeterminate06.png \
-    bootable/recovery/res/images/progress_empty.png:root/res/images/progress_empty.png \
-    bootable/recovery/res/images/progress_fill.png:root/res/images/progress_fill.png \
-    bootable/recovery/res/images/stitch.png:root/res/images/stitch.png
-
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mass_storage,adb \

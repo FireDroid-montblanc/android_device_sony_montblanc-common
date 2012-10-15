@@ -40,20 +40,12 @@ static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
 static struct light_state_t g_notification;
 static struct light_state_t g_battery;
 
-static int g_backlight = 255;
-
 /* The leds we have */
 enum {
 	LED_RED,
 	LED_GREEN,
 	LED_BLUE,
 	LED_BLANK
-};
-
-enum {
-	MANUAL = 0,
-	AUTOMATIC,
-	MANUAL_SENSOR
 };
 
 static int write_int (const char *path, int value) {
@@ -98,7 +90,6 @@ static int write_string (const char *path, const char *value) {
 	return written == -1 ? -errno : 0;
 }
 
-
 /* Color tools */
 static int is_lit (struct light_state_t const* state) {
 	return state->color & 0x00ffffff;
@@ -113,27 +104,18 @@ static int rgb_to_brightness (struct light_state_t const* state) {
 /* The actual lights controlling section */
 static int set_light_backlight (struct light_device_t *dev, struct light_state_t const *state) {
 	int err = 0;
+	int enable = 0;
 	int brightness = rgb_to_brightness(state);
-	int als_mode;
 
-	switch (state->brightnessMode) {
-		case BRIGHTNESS_MODE_SENSOR:
-			als_mode = AUTOMATIC;
-			break;
-		case BRIGHTNESS_MODE_USER:
-			als_mode = BRIGHTNESS_MODE_USER;
-			break;
-		default:
-			als_mode = MANUAL_SENSOR;
-			break;
-	}
+	if ((state->brightnessMode == BRIGHTNESS_MODE_SENSOR) && (brightness > 0))
+		enable = 1;
 
-	LOGV("%s brightness=%d color=0x%08x", __func__, brightness, state->color);
+	LOGV("%s brightness=%d", __func__, brightness);
 	pthread_mutex_lock(&g_lock);
-	g_backlight = brightness;
-	write_int (ALS_FILE, als_mode);
-	err = write_int (LCD_BACKLIGHT_FILE, brightness);
+	err = write_int (ALS_FILE, enable);
+	err |= write_int (LCD_BACKLIGHT_FILE, brightness);
 	pthread_mutex_unlock(&g_lock);
+
 	return err;
 }
 
@@ -153,16 +135,26 @@ static int set_light_buttons (struct light_device_t *dev, struct light_state_t c
 
 static void set_shared_light_locked (struct light_device_t *dev, struct light_state_t *state) {
 	int r, g, b;
-	int delayOn,delayOff;
+	int delayOn, delayOff;
+
+        /* fix some color */
+        LOGV("color 0x%x", state->color);
+
+        if (state->color == 0xffffff)        // white (default)
+               state->color = 0x80ff80;      // make it less purple
+        else if (state->color == 0xffffff00) // orange (charge)
+               state->color = 0xff3000;      // make it like stock rom
 
 	r = (state->color >> 16) & 0xFF;
 	g = (state->color >> 8) & 0xFF;
 	b = (state->color) & 0xFF;
 
-        delayOn = state->flashOnMS;
+	delayOn = state->flashOnMS;
 	delayOff = state->flashOffMS;
 
-	if (state->flashMode != LIGHT_FLASH_NONE) {
+	switch (state->flashMode) {
+	case LIGHT_FLASH_TIMED:
+	case LIGHT_FLASH_HARDWARE:
 		write_string (RED_LED_FILE_TRIGGER, "timer");
 		write_string (GREEN_LED_FILE_TRIGGER, "timer");
 		write_string (BLUE_LED_FILE_TRIGGER, "timer");
@@ -174,10 +166,13 @@ static void set_shared_light_locked (struct light_device_t *dev, struct light_st
 		write_int (RED_LED_FILE_DELAYOFF, delayOff);
 		write_int (GREEN_LED_FILE_DELAYOFF, delayOff);
 		write_int (BLUE_LED_FILE_DELAYOFF, delayOff);
-	} else {
+		break;
+
+	case LIGHT_FLASH_NONE:
 		write_string (RED_LED_FILE_TRIGGER, "none");
 		write_string (GREEN_LED_FILE_TRIGGER, "none");
 		write_string (BLUE_LED_FILE_TRIGGER, "none");
+		break;
 	}
 
 	write_int (RED_LED_FILE, r);
@@ -247,7 +242,7 @@ static int open_lights (const struct hw_module_t* module, char const* name,
 	struct light_device_t *dev = malloc(sizeof (struct light_device_t));
 	memset(dev, 0, sizeof(*dev));
 
-	dev->common.tag 	= HARDWARE_DEVICE_TAG;
+	dev->common.tag		= HARDWARE_DEVICE_TAG;
 	dev->common.version	= 0;
 	dev->common.module 	= (struct hw_module_t*)module;
 	dev->common.close 	= (int (*)(struct hw_device_t*))close_lights;
