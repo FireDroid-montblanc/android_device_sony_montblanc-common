@@ -24,17 +24,17 @@ on init
 
     # setup the global environment
     export EXTERNAL_STORAGE /mnt/sdcard
-    export SECONDARY_STORAGE /mnt/ext_card
+    export SECONDARY_STORAGE /mnt/external_sd
     export EXTERNAL_STORAGE_USB /mnt/usbdisk
 
     # create symlink
     # Create mountpoint for USB disk
-    mkdir /mnt/ext_card 0000 system system
+    mkdir /mnt/external_sd 0000 system system
     mkdir /mnt/usbdisk 0000 system system
 
     # Create symlink
     symlink /mnt/sdcard /sdcard
-    symlink /mnt/ext_card /ext_card
+    symlink /mnt/external_sd /external_sd
     symlink /mnt/usbdisk /usbdisk
 
     # make files in /sys/ non-writable for OTHERS
@@ -120,10 +120,6 @@ on post-fs
     chmod 0644 /modemfs/PERM/PROT/LABEP.CFG
     chown radio radio /modemfs/PERM/PROT/PPVALUES.DAT
     chmod 0644 /modemfs/PERM/PROT/PPVALUES.DAT
-    touch /modemfs/PERM/PROT/MOM.CFG
-    touch /modemfs/PERM/PROT/F2ND.DAT
-    touch /modemfs/PERM/PROT/FXSTAT.X
-    touch /modemfs/CONF/HALTRACE.CFG
 
     # STE: Set permissions for wake locks before services are launched that use them
     chown radio system /sys/power/state
@@ -242,44 +238,6 @@ on boot
 
     class_start bootstage1
 
-    # Permissions for Liblights.
-    chown system system /sys/class/leds/lcd-backlight/brightness
-    chown system system /sys/class/leds/lcd-backlight/als_enable
-    chown system system /sys/class/leds/button-backlight/brightness
-    chown system system /sys/class/leds/keyboard-backlight/brightness
-    chown system system /sys/class/leds/red/brightness
-    chown system system /sys/class/leds/red/use_pattern
-    chown system system /sys/class/leds/green/brightness
-    chown system system /sys/class/leds/green/use_pattern
-    chown system system /sys/class/leds/blue/brightness
-    chown system system /sys/class/leds/blue/use_pattern
-    chown system system /sys/class/leds/so34-led0/brightness
-    chown system system /sys/class/leds/so34-led1/brightness
-    chown system system /sys/class/leds/so34-led2/brightness
-    chown system system /sys/bus/i2c/drivers/as3677/2-0040/pattern_data
-    chown system system /sys/bus/i2c/drivers/as3677/2-0040/pattern_delay
-    chown system system /sys/bus/i2c/drivers/as3677/2-0040/pattern_duration_secs
-    chmod 660 /sys/class/leds/lcd-backlight/brightness
-    chmod 660 /sys/class/leds/lcd-backlight/device/als_enable
-    chmod 660 /sys/class/leds/button-backlight/brightness
-    chmod 660 /sys/class/leds/keyboard-backlight/brightness
-    chmod 660 /sys/class/leds/red/brightness
-    chmod 660 /sys/class/leds/red/use_pattern
-    chmod 660 /sys/class/leds/green/brightness
-    chmod 660 /sys/class/leds/green/use_pattern
-    chmod 660 /sys/class/leds/blue/brightness
-    chmod 660 /sys/class/leds/blue/use_pattern
-    chmod 660 /sys/class/leds/so34-led0/brightness
-    chmod 660 /sys/class/leds/so34-led1/brightness
-    chmod 660 /sys/class/leds/so34-led2/brightness
-
-    # Permissions for Libals.
-    chown system system /sys/bus/i2c/devices/2-0040/als_on
-    chmod 666 /sys/bus/i2c/devices/2-0040/als_on
-    chmod 666 /sys/bus/i2c/devices/2-0036/als_enable
-    chmod 666 /sys/bus/i2c/devices/2-0036/als_result
-    chmod 666 /sys/bus/i2c/devices/2-0037/als
-
     # Permissions for accelerometer and magnetometer.
     chown system system /sys/bus/i2c/devices/2-0018/pollrate_ms
     chown system system /sys/bus/i2c/devices/2-0018/range
@@ -394,7 +352,7 @@ service copsd /system/bin/copsdaemon
 
 service admsrv /system/bin/admsrv
     class main
-    user audio
+    user root
     group system audio inet net_bt net_bt_admin net_raw shell
     ioprio rt 4
     capability NET_ADMIN NET_RAW SYS_NICE
@@ -419,7 +377,7 @@ service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0
     disabled
     oneshot
 
-service hostapd /system/bin/hostapd -dddd /data/misc/wifi/hostapd.conf
+service hostapd_bin /system/bin/hostapd -dddd /data/misc/wifi/hostapd.conf
     class main
     socket wpa_wlan1 dgram 660 wifi wifi
     disabled

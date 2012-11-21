@@ -104,16 +104,11 @@ static int rgb_to_brightness (struct light_state_t const* state) {
 /* The actual lights controlling section */
 static int set_light_backlight (struct light_device_t *dev, struct light_state_t const *state) {
 	int err = 0;
-	int enable = 0;
 	int brightness = rgb_to_brightness(state);
-
-	if ((state->brightnessMode == BRIGHTNESS_MODE_SENSOR) && (brightness > 0))
-		enable = 1;
 
 	LOGV("%s brightness=%d", __func__, brightness);
 	pthread_mutex_lock(&g_lock);
-	err = write_int (ALS_FILE, enable);
-	err |= write_int (LCD_BACKLIGHT_FILE, brightness);
+	err = write_int (LCD_BACKLIGHT_FILE, brightness);
 	pthread_mutex_unlock(&g_lock);
 
 	return err;
@@ -134,16 +129,8 @@ static int set_light_buttons (struct light_device_t *dev, struct light_state_t c
 }
 
 static void set_shared_light_locked (struct light_device_t *dev, struct light_state_t *state) {
-	int r, g, b;
+	int i, r, g, b;
 	int delayOn, delayOff;
-
-        /* fix some color */
-        LOGV("color 0x%x", state->color);
-
-        if (state->color == 0xffffff)        // white (default)
-               state->color = 0x80ff80;      // make it less purple
-        else if (state->color == 0xffffff00) // orange (charge)
-               state->color = 0xff3000;      // make it like stock rom
 
 	r = (state->color >> 16) & 0xFF;
 	g = (state->color >> 8) & 0xFF;
@@ -155,29 +142,36 @@ static void set_shared_light_locked (struct light_device_t *dev, struct light_st
 	switch (state->flashMode) {
 	case LIGHT_FLASH_TIMED:
 	case LIGHT_FLASH_HARDWARE:
-		write_string (RED_LED_FILE_TRIGGER, "timer");
-		write_string (GREEN_LED_FILE_TRIGGER, "timer");
-		write_string (BLUE_LED_FILE_TRIGGER, "timer");
-
-		write_int (RED_LED_FILE_DELAYON, delayOn);
-		write_int (GREEN_LED_FILE_DELAYON, delayOn);
-		write_int (BLUE_LED_FILE_DELAYON, delayOn);
-
-		write_int (RED_LED_FILE_DELAYOFF, delayOff);
-		write_int (GREEN_LED_FILE_DELAYOFF, delayOff);
-		write_int (BLUE_LED_FILE_DELAYOFF, delayOff);
+#ifndef NO_BLINK
+		for (i = 0; i < sizeof(RED_LED_FILE_TRIGGER)/sizeof(RED_LED_FILE_TRIGGER[0]); i++) {
+		write_string (RED_LED_FILE_TRIGGER[i], "timer");
+		write_int (RED_LED_FILE_DELAYON[i], delayOn);
+		write_int (RED_LED_FILE_DELAYOFF[i], delayOff);
+		write_string (GREEN_LED_FILE_TRIGGER[i], "timer");
+		write_int (GREEN_LED_FILE_DELAYON[i], delayOn);
+		write_int (GREEN_LED_FILE_DELAYOFF[i], delayOff);
+		write_string (BLUE_LED_FILE_TRIGGER[i], "timer");
+		write_int (BLUE_LED_FILE_DELAYON[i], delayOn);
+		write_int (BLUE_LED_FILE_DELAYOFF[i], delayOff);
+		}
+#endif
 		break;
-
 	case LIGHT_FLASH_NONE:
-		write_string (RED_LED_FILE_TRIGGER, "none");
-		write_string (GREEN_LED_FILE_TRIGGER, "none");
-		write_string (BLUE_LED_FILE_TRIGGER, "none");
+#ifndef NO_BLINK
+		for (i = 0; i < sizeof(RED_LED_FILE_TRIGGER)/sizeof(RED_LED_FILE_TRIGGER[0]); i++) {
+		write_string (RED_LED_FILE_TRIGGER[i], "none");
+		write_string (GREEN_LED_FILE_TRIGGER[i], "none");
+		write_string (BLUE_LED_FILE_TRIGGER[i], "none");
+		}
+#endif
 		break;
 	}
 
-	write_int (RED_LED_FILE, r);
-	write_int (GREEN_LED_FILE, g);
-	write_int (BLUE_LED_FILE, b);
+	for (i = 0; i < sizeof(RED_LED_FILE)/sizeof(RED_LED_FILE[0]); i++) {
+		write_int (RED_LED_FILE[i], r);
+		write_int (GREEN_LED_FILE[i], g);
+		write_int (BLUE_LED_FILE[i], b);
+	}
 }
 
 static void handle_shared_battery_locked (struct light_device_t *dev) {
@@ -257,12 +251,12 @@ static struct hw_module_methods_t lights_module_methods = {
 };
 
 
-struct hw_module_t HAL_MODULE_INFO_SYM = {
+const struct hw_module_t HAL_MODULE_INFO_SYM = {
 	.tag		= HARDWARE_MODULE_TAG,
 	.version_major	= 1,
 	.version_minor	= 0,
 	.id		= LIGHTS_HARDWARE_MODULE_ID,
 	.name		= "Sony lights module",
-	.author		= "Diogo Ferreira <defer@cyanogenmod.com>, Andreas Makris <Andreas.Makris@gmail.com>",
+	.author		= "Diogo Ferreira <defer@cyanogenmod.com>, Andreas Makris <Andreas.Makris@gmail.com>, Alin Jerpelea <jerpelea@gmail.com>",
 	.methods	= &lights_module_methods,
 };

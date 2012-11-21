@@ -2,6 +2,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
 $(call inherit-product, device/sony/montblanc-common/recovery/recovery.mk)
 
+$(call inherit-product-if-exists, vendor/sony/montblanc-common/montblanc-vendor-blobs.mk)
+
 DEVICE_PACKAGE_OVERLAYS += device/sony/montblanc-common/overlay
 
 # Permissions
@@ -31,6 +33,7 @@ PRODUCT_COPY_FILES += \
     device/sony/montblanc-common/config/asound.conf:system/etc/asound.conf \
     device/sony/montblanc-common/config/dbus.conf:system/etc/dbus.conf \
     device/sony/montblanc-common/config/sysmon.cfg:system/etc/sysmon.cfg \
+    device/sony/montblanc-common/config/hostapd.conf:system/etc/wifi/hostapd.conf \
     device/sony/montblanc-common/config/01stesetup:system/etc/init.d/01stesetup \
     device/sony/montblanc-common/config/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
 
@@ -39,29 +42,35 @@ PRODUCT_PACKAGES += \
     make_ext4fs \
     setup_fs
 
+# Hostapd
+PRODUCT_PACKAGES += \
+    hostapd_cli \
+    hostapd
+
+# BT A2DP
+PRODUCT_PACKAGES += \
+    libasound_module_ctl_bluetooth \
+    libasound_module_pcm_bluetooth
+
 # light package
 PRODUCT_PACKAGES += \
    lights.montblanc
-
-# Bluetooth
-PRODUCT_PACKAGES += \
-   STEBluetooth
 
 # Misc
 PRODUCT_PACKAGES += \
    com.android.future.usb.accessory
 
-# NFC
-#PRODUCT_PACKAGES += \
-#   libnfc \
-#   libnfc_jni \
-#   Nfc \
-#   Tag
-
 # We have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
+
+# Prebuilt hostapd
+PRODUCT_COPY_FILES += \
+    device/sony/montblanc-common/prebuilt/hostapd:system/bin/hostapd \
+    device/sony/montblanc-common/prebuilt/hostapd_cli:system/bin/hostapd_cli \
+    device/sony/montblanc-common/prebuilt/wpa_cli:system/bin/wpa_cli \
+    device/sony/montblanc-common/prebuilt/wpa_supplicant:system/bin/wpa_supplicant
 
 # Custom init / uevent
 PRODUCT_COPY_FILES += \
