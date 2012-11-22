@@ -42,11 +42,6 @@ PRODUCT_PACKAGES += \
     make_ext4fs \
     setup_fs
 
-# Hostapd
-PRODUCT_PACKAGES += \
-    hostapd_cli \
-    hostapd
-
 # BT A2DP
 PRODUCT_PACKAGES += \
     libasound_module_ctl_bluetooth \
