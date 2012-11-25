@@ -77,6 +77,12 @@ PRODUCT_COPY_FILES += \
     device/sony/montblanc-common/recovery/usbid_init.sh:root/sbin/usbid_init.sh \
     device/sony/montblanc-common/recovery/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
 
+# Kernel modules
+PRODUCT_COPY_FILES += \
+    device/sony/montblanc-common/prebuilt/axperiau_ondemandax.ko:system/lib/modules/axperiau_ondemandax.ko \
+    device/sony/montblanc-common/prebuilt/axperiau_pegasusq.ko:system/lib/modules/axperiau_pegasusq.ko \
+    device/sony/montblanc-common/prebuilt/axperiau_smartass2.ko:system/lib/modules/axperiau_smartass2.ko \
+    device/sony/montblanc-common/prebuilt/axperiau_sio_iosched.ko:system/lib/modules/axperiau_sio_iosched.ko
 
 # HW Configs
 PRODUCT_COPY_FILES += \
