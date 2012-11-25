@@ -42,6 +42,11 @@ PRODUCT_PACKAGES += \
     make_ext4fs \
     setup_fs
 
+# Hostapd
+PRODUCT_PACKAGES += \
+hostapd_cli \
+hostapd
+
 # BT A2DP
 PRODUCT_PACKAGES += \
     libasound_module_ctl_bluetooth \
@@ -59,13 +64,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
-
-# Prebuilt hostapd
-PRODUCT_COPY_FILES += \
-    device/sony/montblanc-common/prebuilt/hostapd:system/bin/hostapd \
-    device/sony/montblanc-common/prebuilt/hostapd_cli:system/bin/hostapd_cli \
-    device/sony/montblanc-common/prebuilt/wpa_cli:system/bin/wpa_cli \
-    device/sony/montblanc-common/prebuilt/wpa_supplicant:system/bin/wpa_supplicant
 
 # Custom init / uevent
 PRODUCT_COPY_FILES += \
