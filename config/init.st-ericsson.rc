@@ -155,11 +155,8 @@ on post-fs-data
     write /sys/devices/platform/musb-ux500.0/musb-hdrc/gadget/lun1/nofua 1
 
 on early-boot
-    #start recovery
-    exec /sbin/bootrec
-
     # Start the offline charging
-    exec /system/bin/chargemon
+    exec /system/bin/charger
 
     start cspsa
 
