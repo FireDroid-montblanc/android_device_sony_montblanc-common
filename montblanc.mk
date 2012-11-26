@@ -6,6 +6,8 @@ $(call inherit-product-if-exists, vendor/sony/montblanc-common/montblanc-vendor-
 
 DEVICE_PACKAGE_OVERLAYS += device/sony/montblanc-common/overlay
 
+FIREDROID_VERSION = 1.1
+
 # Permissions
 PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
@@ -96,4 +98,6 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mass_storage,adb \
-    wifi.interface=wlan0
+    wifi.interface=wlan0 \
+    ro.cm.version=$(FIREDROID_VERSION) \
+    ro.modversion=$(FIREDROID_VERSION)
