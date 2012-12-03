@@ -155,8 +155,16 @@ on post-fs-data
     write /sys/devices/platform/musb-ux500.0/musb-hdrc/gadget/lun1/nofua 1
 
 on early-boot
+<<<<<<< HEAD
     # Start the offline charging
     exec /system/bin/charger
+=======
+    #start recovery
+    exec /sbin/bootrec
+
+    # Start the offline charging
+    exec /system/bin/chargemon
+>>>>>>> upstream/ics
 
     start cspsa
 
@@ -302,6 +310,7 @@ on boot
     # chown for signal_disparity and baseline_reset in touch driver
     chown root input /sys/devices/spi3/spi9.0/signal_disparity
     chown root input /sys/devices/spi3/spi9.0/baseline_reset
+<<<<<<< HEAD
 
     #Load wifi modules and MAC setup
     exec /system/bin/install_wlan
@@ -314,6 +323,11 @@ on boot
 
     #Set SIO scheduler
     echo "SIO" > /sys/block/mmcblk0/queue/scheduler
+=======
+
+    #Load wifi modules and MAC setup
+    exec /system/bin/install_wlan
+>>>>>>> upstream/ics
 
 # Crash Safe Parameter Storage Area, serving production parameter requests from clients.
 # Configuration is read from file "/etc/cspsa.conf" and each found area spawns a CSPSA server
@@ -371,6 +385,7 @@ service thermald /system/bin/thermald
 
 # STE
 service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0
+<<<<<<< HEAD
     class main
     socket wpa_wlan0 dgram 660 wifi wifi
     disabled
@@ -378,6 +393,15 @@ service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0
 
 service hostapd_bin /system/bin/hostapd -dddd /data/misc/wifi/hostapd.conf
     class main
+=======
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+service hostapd_bin /system/bin/hostapd -dddd /data/misc/wifi/hostapd.conf
+    class main
+>>>>>>> upstream/ics
     socket wpa_wlan1 dgram 660 wifi wifi
     disabled
     oneshot
