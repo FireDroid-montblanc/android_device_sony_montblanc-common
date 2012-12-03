@@ -46,13 +46,8 @@ PRODUCT_PACKAGES += \
 
 # Hostapd
 PRODUCT_PACKAGES += \
-<<<<<<< HEAD
 hostapd_cli \
 hostapd
-=======
-    hostapd_cli \
-    hostapd
->>>>>>> upstream/ics
 
 # BT A2DP
 PRODUCT_PACKAGES += \
@@ -80,10 +75,6 @@ PRODUCT_COPY_FILES += \
 
 # Recovery bootstrap script
 PRODUCT_COPY_FILES += \
-<<<<<<< HEAD
-=======
-    device/sony/montblanc-common/recovery/bootrec:root/sbin/bootrec \
->>>>>>> upstream/ics
     device/sony/montblanc-common/recovery/usbid_init.sh:root/sbin/usbid_init.sh \
     device/sony/montblanc-common/recovery/postrecoveryboot.sh:root/sbin/postrecoveryboot.sh
 
@@ -106,12 +97,7 @@ PRODUCT_COPY_FILES += \
     device/sony/montblanc-common/config/ste_modem.sh:system/etc/ste_modem.sh
 
 PRODUCT_PROPERTY_OVERRIDES += \
-<<<<<<< HEAD
     persist.sys.usb.config=mass_storage,adb \
     wifi.interface=wlan0 \
     ro.cm.version=$(FIREDROID_VERSION) \
     ro.modversion=$(FIREDROID_VERSION)
-=======
-    persist.sys.usb.config=mtp \
-    wifi.interface=wlan0
->>>>>>> upstream/ics

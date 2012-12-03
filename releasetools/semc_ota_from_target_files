@@ -404,15 +404,10 @@ def WriteFullOTAPackage(input_zip, output_zip):
   #  ts = GetBuildProp("ro.build.date.utc", input_zip)
   #  script.AssertOlderBuild(ts)
 
-<<<<<<< HEAD
   if not OPTIONS.no_assert:
 	device_specific.FullOTA_Assertions()
 
 
-=======
-  AppendAssertions(script, input_zip)
-  device_specific.FullOTA_Assertions()
->>>>>>> upstream/ics
   if OPTIONS.backuptool:
     script.RunBackup("backup")
 
@@ -421,11 +416,7 @@ def WriteFullOTAPackage(input_zip, output_zip):
   if OPTIONS.wipe_user_data:
     script.FormatPartition("/data")
 
-<<<<<<< HEAD
 #  has_boot_partition = 'fstab' in OPTIONS.info_dict and '/boot' in OPTIONS.info_dict['fstab']
-=======
-  has_boot_partition = 'fstab' in OPTIONS.info_dict and '/boot' in OPTIONS.info_dict['fstab']
->>>>>>> upstream/ics
 
   script.FormatPartition("/system")
   script.Mount("/system")
@@ -459,15 +450,9 @@ def WriteFullOTAPackage(input_zip, output_zip):
     script.ShowProgress(0.2, 10)
     script.RunBackup("restore")
 
-<<<<<<< HEAD
 #  script.ShowProgress(0.2, 10)
 #  if has_boot_partition:
 #      script.WriteRawImage("/boot", "boot.img")
-=======
-  script.ShowProgress(0.2, 10)
-  if has_boot_partition:
-      script.WriteRawImage("/boot", "boot.img")
->>>>>>> upstream/ics
 
   script.ShowProgress(0.1, 0)
   device_specific.FullOTA_InstallEnd()
