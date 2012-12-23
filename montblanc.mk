@@ -99,5 +99,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mass_storage,adb \
     wifi.interface=wlan0 \
+    ro.build.type=userdebug \
     ro.cm.version=$(FIREDROID_VERSION) \
     ro.modversion=$(FIREDROID_VERSION)
