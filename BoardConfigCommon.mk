@@ -31,13 +31,12 @@ BOARD_FORCE_RAMDISK_ADDRESS := 0x41200000
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_STE := true
 
-#audio
+# Audio
 BOARD_USES_GENERIC_AUDIO := false
 BOARD_USES_ALSA_AUDIO := true
-#BOARD_HAVE_FM_RADIO_STERICSSON := true
-COMMON_GLOBAL_CFLAGS += -DSTE_AUDIO -DSTE_HDMI
+COMMON_GLOBAL_CFLAGS += -DSTE_AUDIO
 
-#WIFI
+# WIFI
 BOARD_WLAN_DEVICE := cw1200
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
@@ -49,9 +48,10 @@ BOARD_SOFTAP_DEVICE_TI := NL80211
 # Graphics
 USE_OPENGL_RENDERER := true
 BOARD_EGL_CFG := device/sony/montblanc-common/config/egl.cfg
+COMMON_GLOBAL_CFLAGS += -DSTE_HARDWARE -DSTE_HDMI
 
+# Lights
 TARGET_PROVIDES_LIBLIGHTS := true
-#BOARD_SYSFS_LIGHT_SENSOR := /sys/class/leds/lcd-backlight/als_enable
 
 # Custom boot
 TARGET_PROVIDES_INIT_RC := true
@@ -59,7 +59,7 @@ TARGET_RECOVERY_PRE_COMMAND := "touch /cache/recovery/boot;sync;"
 BOARD_CUSTOM_BOOTIMG_MK := device/sony/montblanc-common/custombootimg.mk
 TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := device/sony/montblanc-common/releasetools/semc_ota_from_target_files
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/sony/montblanc-common/recovery/recovery-keys.c
-BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_15x24.h\"
+BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_10x18.h\"
 
 BOARD_UMS_LUNFILE := "/sys/devices/platform/musb-ux500.0/musb-hdrc/gadget/lun0/file"
 TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/musb-ux500.0/musb-hdrc/gadget/lun0/file"
