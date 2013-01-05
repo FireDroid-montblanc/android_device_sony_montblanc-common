@@ -39,6 +39,10 @@ PRODUCT_COPY_FILES += \
     device/sony/montblanc-common/config/01stesetup:system/etc/init.d/01stesetup \
     device/sony/montblanc-common/config/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
 
+# CMFileManager
+PRODUCT_PACKAGES += \
+    CMFileManager
+
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     make_ext4fs \
