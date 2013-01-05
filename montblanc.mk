@@ -6,7 +6,7 @@ $(call inherit-product-if-exists, vendor/sony/montblanc-common/montblanc-vendor-
 
 DEVICE_PACKAGE_OVERLAYS += device/sony/montblanc-common/overlay
 
-FIREDROID_VERSION = 1.3
+FIREDROID_VERSION = 1.4
 
 # Permissions
 PRODUCT_COPY_FILES += \
