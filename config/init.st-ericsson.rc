@@ -302,16 +302,12 @@ on boot
     #Load wifi modules and MAC setup
     exec /system/bin/install_wlan
 
-<<<<<<< .merge_file_YgIqJ5
     #Load kernel modules
     insmod /system/lib/modules/axperiau_ondemandax.ko
     insmod /system/lib/modules/axperiau_pegasusq.ko
     insmod /system/lib/modules/axperiau_smartass2.ko
     insmod /system/lib/modules/axperiau_sio_iosched.ko
 
-    #Set SIO scheduler
-    echo "SIO" > /sys/block/mmcblk0/queue/scheduler
-=======
     # power-management
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
     write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor ondemand
@@ -325,7 +321,6 @@ on boot
 
     # SEMC: Include IO wait time into CPU usage calculation to increase IO performance
     write /proc/sys/kernel/sysrq 0
->>>>>>> .merge_file_r6IM94
 
 # Crash Safe Parameter Storage Area, serving production parameter requests from clients.
 # Configuration is read from file "/etc/cspsa.conf" and each found area spawns a CSPSA server
