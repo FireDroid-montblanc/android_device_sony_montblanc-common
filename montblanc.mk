@@ -27,6 +27,7 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
+    frameworks/base/data/etc/com.stericsson.hardware.fm.receiver.xml:system/etc/permissions/com.stericsson.hardware.fm.receiver.xml \
     packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
 
 # Configs
@@ -64,6 +65,7 @@ PRODUCT_PACKAGES += \
 
 # Misc
 PRODUCT_PACKAGES += \
+   FmRadioReceiver \
    com.android.future.usb.accessory
 
 # We have enough storage space to hold precise GC data
@@ -100,6 +102,10 @@ PRODUCT_COPY_FILES += \
     device/sony/montblanc-common/config/ril_config:system/etc/ril_config \
     device/sony/montblanc-common/config/install_wlan:system/bin/install_wlan \
     device/sony/montblanc-common/config/ste_modem.sh:system/etc/ste_modem.sh
+
+# GPS
+PRODUCT_COPY_FILES += \
+    device/sony/montblanc-common/config/gps.conf:system/etc/gps.conf
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mass_storage,adb \
