@@ -38,6 +38,7 @@ PRODUCT_COPY_FILES += \
     device/sony/montblanc-common/config/sysmon.cfg:system/etc/sysmon.cfg \
     device/sony/montblanc-common/config/hostapd.conf:system/etc/wifi/hostapd.conf \
     device/sony/montblanc-common/config/01stesetup:system/etc/init.d/01stesetup \
+    device/sony/montblanc-common/config/10dhcpcd:system/etc/init.d/10dhcpcd \
     device/sony/montblanc-common/config/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
 
 # CMFileManager
@@ -67,6 +68,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
    FmRadioReceiver \
    com.android.future.usb.accessory
+
+#Fmradio
+#PRODUCT_PACKAGES += \
+#   FmRadioReceiver
 
 # We have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
@@ -105,7 +110,11 @@ PRODUCT_COPY_FILES += \
 
 # GPS
 PRODUCT_COPY_FILES += \
-    device/sony/montblanc-common/config/gps.conf:system/etc/gps.conf
+    device/sony/montblanc-common/config/gps.conf:system/etc/gps.conf\
+    device/sony/montblanc-common/config/cacert.txt:system/etc/suplcert/cacert.txt
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    sys.mem.max_hidden_apps=10
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mass_storage,adb \
